@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Drawing;
 using OxyPlot;
@@ -6,6 +6,7 @@ using OxyPlot.Series;
 using org.mariuszgromada.math.mxparser;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Contexts;
+using System.Runtime.InteropServices;
 
 namespace NewtonMethod
 {
@@ -20,6 +21,7 @@ namespace NewtonMethod
 
         public void GetFunction(string functionText)
         {
+            double interval = Math.Abs(Convert.ToDouble(tbA.Text)) + Math.Abs(Convert.ToDouble(tbB.Text));
             Graphic.Clear();
 
             Function function = new Function("f(x) = " + functionText);
@@ -33,8 +35,8 @@ namespace NewtonMethod
                 StrokeThickness = 2
             };
 
-            medianLine.Points.Add(new DataPoint(Convert.ToInt32(tbA.Text), 0));
-            medianLine.Points.Add(new DataPoint(Convert.ToInt32(tbB.Text), 0));
+            medianLine.Points.Add(new DataPoint(-interval, 0));
+            medianLine.Points.Add(new DataPoint(interval, 0));
 
             var absicc = new LineSeries
             {
@@ -43,8 +45,8 @@ namespace NewtonMethod
                 StrokeThickness = 2,
             };
 
-            absicc.Points.Add(new DataPoint(0, Convert.ToInt32(tbA.Text)));
-            absicc.Points.Add(new DataPoint(0, Convert.ToInt32(tbB.Text)));
+            absicc.Points.Add(new DataPoint(0, interval));
+            absicc.Points.Add(new DataPoint(0, -interval));
 
             // Создаем серию точек графика
             var lineSeries = new LineSeries
@@ -53,11 +55,15 @@ namespace NewtonMethod
                 Color = OxyColor.FromRgb(255, 0, 0),
             };
 
-
-            for (int counterI = Convert.ToInt32(tbA.Text); counterI < Convert.ToInt32(tbB.Text); ++counterI)
+            // why
+            string ihatemxparser = "";
+            for (double counterI = Convert.ToDouble(tbA.Text) * 10; counterI < Convert.ToDouble(tbB.Text) * 10 + 1; ++counterI)
             {
-                Expression e1 = new Expression($"f({counterI})", function);
-                lineSeries.Points.Add(new DataPoint(counterI, e1.calculate()));
+                ihatemxparser = (counterI / 10).ToString().Replace(",", ".");
+
+                Expression e1 = new Expression($"f({ihatemxparser})", function);
+                double y = e1.calculate();
+                lineSeries.Points.Add(new DataPoint(Convert.ToDouble(ihatemxparser.Replace(".", ",")), y));
             }
 
             lineSeries.Points.AddRange(Graphic);
@@ -81,38 +87,119 @@ namespace NewtonMethod
             var derivative = new Expression($"der({tbFunc.Text}, x, {currentX})");
             var secondDerivative = new Expression($"der(der({tbFunc.Text}, x, x), x, {currentX})");
 
-            if(SolveFunc(function, tbA.Text) * new Expression($"der(der({tbFunc.Text}, x, x), x, {tbA.Text.Replace(".", ",")})").calculate() > 0)
+            if (checkedListBox1.CheckedIndices.Contains(0))
             {
-                currentX = Convert.ToDouble(tbA.Text.Replace(".", ","));
-                funcRes = SolveFunc(function, currentX.ToString());
-                derivative = new Expression($"der({tbFunc.Text}, x, {currentX})");
-            }
-
-            while (isWorking)
-            {
-                nextX = currentX - funcRes / derivative.calculate();
-                funcRes = SolveFunc(function, nextX.ToString().Replace(",", "."));
-                derivative = new Expression($"der({tbFunc.Text}, x, {nextX.ToString().Replace(",", ".")})");
-
-                if (Math.Abs(nextX - currentX) < epsilon || Math.Abs(derivative.calculate()) < 1e-10)
+                if (SolveFunc(function, tbA.Text) * new Expression($"der(der({tbFunc.Text}, x, x), x, {tbA.Text.Replace(".", ",")})").calculate() > 0)
                 {
-                    break;
+                    currentX = Convert.ToDouble(tbA.Text.Replace(".", ","));
+                    funcRes = SolveFunc(function, currentX.ToString());
+                    derivative = new Expression($"der({tbFunc.Text}, x, {currentX})");
                 }
 
-                if (iterationCount == 20)
+                while (isWorking)
                 {
-                    MessageBox.Show($"В данном интервале [{tbA.Text}; {tbB.Text}] нет корней, Также возможен случай, что x=0.\n");
-                    isWorking = false;
-                    break;
+                    nextX = currentX - funcRes / derivative.calculate();
+                    funcRes = SolveFunc(function, nextX.ToString().Replace(",", "."));
+                    derivative = new Expression($"der({tbFunc.Text}, x, {nextX.ToString().Replace(",", ".")})");
+
+                    if (Math.Abs(nextX - currentX) < epsilon || Math.Abs(derivative.calculate()) < 1e-10)
+                    {
+                        break;
+                    }
+
+                    if (iterationCount == 20)
+                    {
+                        MessageBox.Show($"Превышенно максимальное чисчло итераций.\n");
+                        isWorking = false;
+                        break;
+                    }
+                    ++iterationCount;
+                    currentX = nextX;
                 }
-                ++iterationCount;
-                currentX = nextX;
+
+                if (isWorking)
+                {
+                    rtbAnswers.AppendText($"Корень X: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}\n");
+                    MessageBox.Show($"Корень X: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}");
+                }
             }
 
-            if (isWorking)
+            if (checkedListBox1.CheckedIndices.Contains(1))
             {
-                rtbAnswers.AppendText($"Точка минимума: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}\n");
-                MessageBox.Show($"Точка минимума: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}");
+                if (SolveFunc(function, tbA.Text) * new Expression($"der(der({tbFunc.Text}, x, x), x, {tbA.Text.Replace(".", ",")})").calculate() > 0)
+                {
+                    currentX = Convert.ToDouble(tbA.Text.Replace(".", ","));
+                    funcRes = SolveFunc(function, currentX.ToString());
+                    derivative = new Expression($"der({tbFunc.Text}, x, {currentX})");
+                    secondDerivative = new Expression($"der(der({tbFunc.Text}, x, x), x, {currentX})");
+                }
+
+                while (isWorking)
+                {
+                    nextX = currentX - derivative.calculate() / secondDerivative.calculate();
+                    funcRes = SolveFunc(function, nextX.ToString().Replace(",", "."));
+                    derivative = new Expression($"der({tbFunc.Text}, x, {nextX.ToString().Replace(",", ".")})");
+                    secondDerivative = new Expression($"der(der({tbFunc.Text}, x, x), x, {nextX.ToString().Replace(",", ".")})");
+
+                    if (Math.Abs(nextX - currentX) < epsilon || Math.Abs(derivative.calculate()) < 1e-10)
+                    {
+                        break;
+                    }
+
+                    if (iterationCount == 20)
+                    {
+                        MessageBox.Show($"Превышенно максимальное чисчло итераций.\n");
+                        isWorking = false;
+                        break;
+                    }
+                    ++iterationCount;
+                    currentX = nextX;
+                }
+
+                if (isWorking)
+                {
+                    rtbAnswers.AppendText($"Точка минимума: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}\n");
+                    MessageBox.Show($"Точка минимума: {Math.Round(currentX, Convert.ToInt32(tbAcc.Text))}");
+                }
+            }
+
+            if (checkedListBox1.CheckedIndices.Contains(2))
+            {
+                if (SolveFunc(function, tbA.Text) * new Expression($"der(der({tbFunc.Text}, x, x), x, {tbA.Text.Replace(".", ",")})").calculate() > 0)
+                {
+                    currentX = Convert.ToDouble(tbA.Text.Replace(".", ","));
+                    funcRes = SolveFunc(function, currentX.ToString());
+                    derivative = new Expression($"der({tbFunc.Text}, x, {currentX})");
+                    secondDerivative = new Expression($"der(der({tbFunc.Text}, x, x), x, {currentX})");
+                }
+
+                while (isWorking)
+                {
+                    nextX = currentX - derivative.calculate() / secondDerivative.calculate();
+                    funcRes = SolveFunc(function, nextX.ToString().Replace(",", "."));
+                    derivative = new Expression($"der({tbFunc.Text}, x, {nextX.ToString().Replace(",", ".")})");
+                    secondDerivative = new Expression($"der(der({tbFunc.Text}, x, x), x, {nextX.ToString().Replace(",", ".")})");
+
+                    if (Math.Abs(nextX - currentX) < epsilon || Math.Abs(derivative.calculate()) < 1e-10)
+                    {
+                        break;
+                    }
+
+                    if (iterationCount == 20)
+                    {
+                        MessageBox.Show($"Превышенно максимальное чисчло итераций.\n");
+                        isWorking = false;
+                        break;
+                    }
+                    ++iterationCount;
+                    currentX = nextX;
+                }
+
+                if (isWorking)
+                {
+                    rtbAnswers.AppendText($"Точка максимума: {Math.Round(currentX * -1, Convert.ToInt32(tbAcc.Text))}\n");
+                    MessageBox.Show($"Точка максимума: {Math.Round(currentX * -1, Convert.ToInt32(tbAcc.Text))}");
+                }
             }
         }
         public double SolveFunc(Function function, string x)
@@ -122,8 +209,26 @@ namespace NewtonMethod
 
         private void расчетыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetFunction(tbFunc.Text);
-            NewtonMethod();
+            try
+            {
+                NewtonMethod();
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Please enter valid numbers.");
+            }
+        }
+
+        private void посторитьГрафикToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GetFunction(tbFunc.Text);
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Please enter valid numbers.");
+            }
         }
     }
 }
