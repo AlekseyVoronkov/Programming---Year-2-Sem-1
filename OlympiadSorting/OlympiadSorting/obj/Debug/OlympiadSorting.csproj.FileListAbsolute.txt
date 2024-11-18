@@ -1,0 +1,10 @@
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\bin\Debug\OlympiadSorting.exe.config
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\bin\Debug\OlympiadSorting.exe
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\bin\Debug\OlympiadSorting.pdb
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.csproj.AssemblyReference.cache
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.Form1.resources
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.Properties.Resources.resources
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.csproj.GenerateResource.cache
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.csproj.CoreCompileInputs.cache
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.exe
+C:\Users\Gleb\source\repos\OlympiadSorting\OlympiadSorting\obj\Debug\OlympiadSorting.pdb
