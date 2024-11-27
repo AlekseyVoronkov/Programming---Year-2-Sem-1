@@ -1,0 +1,16 @@
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\DefiniteIntegralCalculation.exe.config
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\DefiniteIntegralCalculation.exe
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\DefiniteIntegralCalculation.pdb
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\MathParser.org-mXparser.dll
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\OxyPlot.dll
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\OxyPlot.WindowsForms.dll
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\OxyPlot.xml
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\bin\Debug\OxyPlot.WindowsForms.xml
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.csproj.AssemblyReference.cache
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.Form1.resources
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.Properties.Resources.resources
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.csproj.GenerateResource.cache
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.csproj.CoreCompileInputs.cache
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\Definite.85ED3378.Up2Date
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.exe
+C:\Users\Gleb\source\repos\DefiniteIntegralCalculation\DefiniteIntegralCalculation\obj\Debug\DefiniteIntegralCalculation.pdb
