@@ -80,51 +80,35 @@ namespace GoldenRatio
     {
       if (checkedListBox1.CheckedIndices.Contains(0)) // find min
       {
-        CalculateExtremum(true);
+        CalculateExtremumBruteForce(true);
       }
 
       if (checkedListBox1.CheckedIndices.Contains(1)) // max
       {
-        CalculateExtremum(false);
+        CalculateExtremumBruteForce(false);
       }
     }
 
-    private void CalculateExtremum(bool isMin)
+    private void CalculateExtremumBruteForce(bool isMin)
     {
       double epsilon = Convert.ToDouble(tbEpsilon.Text.Replace(".", ","));
       double leftLimitation = Convert.ToDouble(tbA.Text.Replace(",", "."));
       double rightLimitation = Convert.ToDouble(tbB.Text.Replace(",", "."));
-      Function func = new Function("f(x) = " + (isMin ? "-" : "") + tbFunc.Text);
-      double goldenRatio = (Math.Sqrt(5) - 1) / 2;
+      double step = (rightLimitation - leftLimitation) / 300; // 300 steps
+      double extremumValue = isMin ? double.MaxValue : double.MinValue;
+      double extremumPoint = leftLimitation;
 
-      double x1 = rightLimitation - goldenRatio * (rightLimitation - leftLimitation);
-      double x2 = leftLimitation + goldenRatio * (rightLimitation - leftLimitation);
-      double resultOfX1 = SolveFunc(func, x1.ToString());
-      double resultOfX2 = SolveFunc(func, x2.ToString());
-
-      while (Math.Abs(rightLimitation - leftLimitation) > epsilon)
+      for (double x = leftLimitation; x <= rightLimitation; x += step)
       {
-        if ((isMin && resultOfX1 < resultOfX2) || (!isMin && resultOfX1 > resultOfX2))
+        double currentValue = SolveFunc(new Function("f(x) = " + tbFunc.Text), x.ToString().Replace(",", "."));
+        if ((isMin && currentValue < extremumValue) || (!isMin && currentValue > extremumValue))
         {
-          rightLimitation = x2;
-          x2 = x1;
-          x1 = rightLimitation - goldenRatio * (rightLimitation - leftLimitation);
+          extremumValue = currentValue;
+          extremumPoint = x;
         }
-        else
-        {
-          leftLimitation = x1;
-          x1 = x2;
-          x2 = leftLimitation + goldenRatio * (rightLimitation - leftLimitation);
-        }
-        resultOfX1 = SolveFunc(func, x1.ToString());
-        resultOfX2 = SolveFunc(func, x2.ToString());
       }
 
-      double result = (leftLimitation + rightLimitation) / 2;
-      double resultValue = Math.Round(SolveFunc(func, result.ToString().Replace(",", ".")), Convert.ToInt32(tbAcc.Text));
-      result = Math.Round(result, Convert.ToInt32(tbAcc.Text));
-
-      rtbAnswers.AppendText($"{(isMin ? "min" : "max")} = {result}\n\r");
+      rtbAnswers.AppendText($"{(isMin ? "Minimum" : "Maximum")} = {Math.Round(extremumValue, Convert.ToInt32(tbAcc.Text))} at x = {Math.Round(extremumPoint, Convert.ToInt32(tbAcc.Text))}\n");
     }
 
     public double SolveFunc(Function function, string x)
@@ -154,6 +138,11 @@ namespace GoldenRatio
       {
         MessageBox.Show("Please enter valid numbers.");
       }
+    }
+
+    private void очиститьРезультатыToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      rtbAnswers.Clear();
     }
   }
 }
